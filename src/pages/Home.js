@@ -67,7 +67,8 @@ const Home = () => {
         return  <Container>
             <Row>
                 {data.map(item => {
-                    if (item?.data?.data?.uri) {
+                    console.log('item---', item.data.uri)
+                    if (item?.data?.uri) {
                         return <Col sm={4} style={{marginTop: 30}}>
                             <NFTItem data={item}/>
                         </Col>
