@@ -13,7 +13,6 @@ const Home = () => {
     const [data, setData] = React.useState([]);
 
     React.useEffect(() => {
-        console.log('window', window)
         setTimeout(() => {
             if (window.hasOwnProperty('solana')) {
                 setPhantom(window["solana"]);
@@ -37,7 +36,7 @@ const Home = () => {
 
     const getConnection = () => {
         setConnection(new web3.Connection(
-            'https://api.devnet.solana.com',
+            process.env.REACT_APP_RPC_URL,
             'confirmed',
         ));
     };
@@ -63,6 +62,18 @@ const Home = () => {
         console.log(result);
         setData(result)
     }, [connection, publicKey])
+
+    const RenderData = React.useCallback(() => {
+        return  <Container>
+            <Row>
+                {data.map(item => {
+                    return <Col sm={4} style={{marginTop: 30}}>
+                        <NFTItem data={item}/>
+                    </Col>
+                })}
+            </Row>
+        </Container>
+    }, [data])
     return <ContainerView>
         {(phantom && !connected) && <button onClick={connectPhantom}>Connect Phantom</button>}
         {(phantom && connected) && <button onClick={disconnectHandler}>Disconnect Phantom</button>}
@@ -74,16 +85,9 @@ const Home = () => {
             Get Phantom
         </a>}
         {/*{(phantom && connected) && <button onClick={getBalance}>Get Balance</button>}*/}
-        {(phantom && connected) && <button onClick={getTokens}>Get Tokens</button>}
-        <Container>
-            <Row>
-                {data.map(item => {
-                    return <Col sm={4}>
-                        <NFTItem data={item}/>
-                    </Col>
-                })}
-            </Row>
-        </Container>
+        {(phantom && connected) && <button onClick={getTokens}>Get NFTs</button>}
+        {connected && data.length === 0 && <p style={{color: 'white'}}>No NFTs</p>}
+        {RenderData()}
 
     </ContainerView>
 }

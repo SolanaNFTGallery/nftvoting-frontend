@@ -89,28 +89,28 @@ const METADATA_SCHEMA = new Map([
  * @returns {Promise<void>}
  */
 export async function getNFTTokens(owner, connection) {
-    // const result = await connection.getParsedTokenAccountsByOwner(owner, {programId: new PublicKey(ProgramIDS.SPL_TOKEN)});
-    // const ret = [];
-    // if (result && result.value && result.value.length) {
-    //     for (let i = 0; i < result.value.length; i++) {
-    //         const data = result.value[i].account.data;
-    //         const {info: {mint, tokenAmount}} = data.parsed;
-    //         if (tokenAmount.uiAmount === 1) {
-    //             // mint should be the NFT token
-    //             try {
-    //                 const metadata = await getMetadata(connection, mint);
-    //                 const {
-    //                     data: {uri}} = metadata;
-    //                 if (uri) {
-    //                     ret.push({...data, token: mint});
-    //                 }
-    //             }catch(exception){}
-    //         }
-    //     }
-    // }
-    // return ret;
-    const sample = await getMetadata(new Connection('https://api.devnet.solana.com','confirmed'), '7m9gHwaYRd5BGmDedSM7pvEAfakqYbUnuNBhNVgreVB9')
-    return [sample];
+    const result = await connection.getParsedTokenAccountsByOwner(owner, {programId: new PublicKey(ProgramIDS.SPL_TOKEN)});
+    const ret = [];
+    if (result && result.value && result.value.length) {
+        for (let i = 0; i < result.value.length; i++) {
+            const data = result.value[i].account.data;
+            const {info: {mint, tokenAmount}} = data.parsed;
+            if (tokenAmount.uiAmount === 1) {
+                // mint should be the NFT token
+                try {
+                    const metadata = await getMetadata(connection, mint);
+                    const {
+                        data: {uri}} = metadata;
+                    if (uri) {
+                        ret.push({...data, token: mint});
+                    }
+                }catch(exception){}
+            }
+        }
+    }
+    return ret;
+    // const sample = await getMetadata(new Connection('https://api.devnet.solana.com','confirmed'), '7m9gHwaYRd5BGmDedSM7pvEAfakqYbUnuNBhNVgreVB9')
+    // return [sample];
 }
 
 

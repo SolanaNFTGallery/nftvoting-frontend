@@ -5,14 +5,14 @@ import {getMetadata} from "../service/metadata";
 const NFTItem = (data) => {
     const [metaData, setMetaData] = React.useState({});
     React.useEffect(() => {
-        console.log('data---', data.data.data.uri);
+        // console.log('data---', data.data.data.uri);
         getData();
     }, [data]);
 
     const getData = React.useCallback(async () => {
         const result = await getMetadata(data.data.data.uri)
         setMetaData(result.data);
-        console.log('metadata--',  result.data)
+        // console.log('metadata--',  result.data)
     }, [data.data.data.uri])
     return (
         <Container>
@@ -32,6 +32,7 @@ const Container = styled.div`
   width: 100%;
   background-color: #161519;
   padding-bottom: 20px;
+  border-radius: 30px;
 `
 const Title = styled.h2`
   color: white;
@@ -47,6 +48,7 @@ const Date = styled.h4`
 const NFTImg = styled.img`
   width: 100%;
   height: 300px;
+  border-radius: 30px;
 `;
 
 export default NFTItem
