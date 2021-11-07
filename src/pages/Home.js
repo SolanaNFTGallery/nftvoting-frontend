@@ -67,9 +67,13 @@ const Home = () => {
         return  <Container>
             <Row>
                 {data.map(item => {
-                    return <Col sm={4} style={{marginTop: 30}}>
-                        <NFTItem data={item}/>
-                    </Col>
+                    if (item?.data?.data?.uri) {
+                        return <Col sm={4} style={{marginTop: 30}}>
+                            <NFTItem data={item}/>
+                        </Col>
+                    }
+                    return <div/>
+
                 })}
             </Row>
         </Container>
