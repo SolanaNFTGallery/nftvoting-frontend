@@ -149,6 +149,10 @@ async function getMetadata(connection, mint) {
     }
 }
 
+export const getNFTByAddress = (address) => {
+    getMetadata(new Connection(process.env.REACT_APP_RPC_URL, 'confirmed'), address)
+}
+
 // getMetadata(new Connection('https://api.devnet.solana.com','confirmed'), '7m9gHwaYRd5BGmDedSM7pvEAfakqYbUnuNBhNVgreVB9').then(result => {
 //     console.log(result);
 // }).catch(error => {

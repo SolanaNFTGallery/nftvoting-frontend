@@ -2,9 +2,10 @@ import React from 'react';
 import {getNFTTokens} from '../service/web3';
 import NFTItem from "../components/NFTItem";
 import styled from 'styled-components';
-import { Button, Stack, Container as ChacraContainer } from "@chakra-ui/react"
+import { Button, Stack } from "@chakra-ui/react"
 import { Container, Row, Col } from 'react-grid-system';
 const web3 = require('@solana/web3.js');
+const {PublicKey} = require('@solana/web3.js');
 
 const Home = () => {
     const [phantom, setPhantom] = React.useState(null);
@@ -34,6 +35,11 @@ const Home = () => {
             setConnection(null)
         });
     }, [phantom]);
+
+    const getInitNFTs = async () => {
+        const results = await getNFTTokens(new PublicKey(process.env.REACT_APP_WALLET_ADDRESS), connection)
+        setData(results);
+    };
 
     const getConnection = () => {
         setConnection(new web3.Connection(
@@ -84,18 +90,6 @@ const Home = () => {
         </Container>
     }, [data])
     return <ContainerView>
-        {/*{(phantom && !connected) && <button onClick={connectPhantom}>Connect Phantom</button>}*/}
-        {/*{(phantom && connected) && <button onClick={disconnectHandler}>Disconnect Phantom</button>}*/}
-        {/*{!phantom && <a*/}
-        {/*    href="https://phantom.app/"*/}
-        {/*    target="_blank"*/}
-        {/*    className="bg-purple-500 px-4 py-2 border border-transparent rounded-md text-base font-medium text-white"*/}
-        {/*>*/}
-        {/*    Get Phantom*/}
-        {/*</a>}*/}
-        {/*/!*{(phantom && connected) && <button onClick={getBalance}>Get Balance</button>}*!/*/}
-        {/*{(phantom && connected) && <button onClick={getTokens}>Get NFTs</button>}*/}
-        {/*{connected && data.length === 0 && <p style={{color: 'white'}}>No NFTs</p>}*/}
         <Stack direction="row" spacing={4} align="flex-end">
             {(phantom && !connected) && <Button colorScheme="teal" variant="solid" onClick={connectPhantom}>
                 Connect Phantom
@@ -112,6 +106,9 @@ const Home = () => {
                     Get Phantom
                 </Button>
             </a>}
+            {(phantom && connected) && <Button colorScheme="teal" variant="outline" onClick={getInitNFTs}>
+                Get Init NFTs
+            </Button>}
             {(phantom && connected) && <Button colorScheme="teal" variant="outline" onClick={getTokens}>
                 Get NFTs
             </Button>}
