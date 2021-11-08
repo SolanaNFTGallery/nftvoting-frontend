@@ -37,6 +37,7 @@ const Container = styled.div`
 `
 const Title = styled.h2`
   color: white;
+  margin-top: 10px;
 `
 const Description = styled.p`
   color: #aca1b0;

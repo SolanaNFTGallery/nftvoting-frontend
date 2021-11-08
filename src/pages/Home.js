@@ -2,6 +2,7 @@ import React from 'react';
 import {getNFTTokens} from '../service/web3';
 import NFTItem from "../components/NFTItem";
 import styled from 'styled-components';
+import { Button, Stack, Container as ChacraContainer } from "@chakra-ui/react"
 import { Container, Row, Col } from 'react-grid-system';
 const web3 = require('@solana/web3.js');
 
@@ -78,24 +79,43 @@ const Home = () => {
                         </Col>
                     }
                     return <div key={item?.token}/>
-
                 })}
             </Row>
         </Container>
     }, [data])
     return <ContainerView>
-        {(phantom && !connected) && <button onClick={connectPhantom}>Connect Phantom</button>}
-        {(phantom && connected) && <button onClick={disconnectHandler}>Disconnect Phantom</button>}
-        {!phantom && <a
-            href="https://phantom.app/"
-            target="_blank"
-            className="bg-purple-500 px-4 py-2 border border-transparent rounded-md text-base font-medium text-white"
-        >
-            Get Phantom
-        </a>}
-        {/*{(phantom && connected) && <button onClick={getBalance}>Get Balance</button>}*/}
-        {(phantom && connected) && <button onClick={getTokens}>Get NFTs</button>}
-        {connected && data.length === 0 && <p style={{color: 'white'}}>No NFTs</p>}
+        {/*{(phantom && !connected) && <button onClick={connectPhantom}>Connect Phantom</button>}*/}
+        {/*{(phantom && connected) && <button onClick={disconnectHandler}>Disconnect Phantom</button>}*/}
+        {/*{!phantom && <a*/}
+        {/*    href="https://phantom.app/"*/}
+        {/*    target="_blank"*/}
+        {/*    className="bg-purple-500 px-4 py-2 border border-transparent rounded-md text-base font-medium text-white"*/}
+        {/*>*/}
+        {/*    Get Phantom*/}
+        {/*</a>}*/}
+        {/*/!*{(phantom && connected) && <button onClick={getBalance}>Get Balance</button>}*!/*/}
+        {/*{(phantom && connected) && <button onClick={getTokens}>Get NFTs</button>}*/}
+        {/*{connected && data.length === 0 && <p style={{color: 'white'}}>No NFTs</p>}*/}
+        <Stack direction="row" spacing={4} align="flex-end">
+            {(phantom && !connected) && <Button colorScheme="teal" variant="solid" onClick={connectPhantom}>
+                Connect Phantom
+            </Button>}
+            {(phantom && connected) && <Button colorScheme="teal" variant="solid" onClick={disconnectHandler}>
+                DisConnect Phantom
+            </Button>}
+            {!phantom && <a
+                href="https://phantom.app/"
+                target="_blank"
+                className="bg-purple-500 px-4 py-2 border border-transparent rounded-md text-base font-medium text-white"
+            >
+                <Button colorScheme="teal" variant="solid">
+                    Get Phantom
+                </Button>
+            </a>}
+            {(phantom && connected) && <Button colorScheme="teal" variant="outline" onClick={getTokens}>
+                Get NFTs
+            </Button>}
+        </Stack>
         {RenderData()}
 
     </ContainerView>
@@ -104,6 +124,7 @@ const ContainerView = styled.div`
     padding-top: 100px;
   padding-left: 20%;
   padding-right: 20%;
+  flex:1;
 `;
 
 export default Home;
