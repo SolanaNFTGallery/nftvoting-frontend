@@ -90,6 +90,7 @@ const METADATA_SCHEMA = new Map([
  */
 export async function getNFTTokens(owner, connection) {
     const result = await connection.getParsedTokenAccountsByOwner(owner, {programId: new PublicKey(ProgramIDS.SPL_TOKEN)});
+    // console.log('length----', result)
     const ret = [];
     if (result && result.value && result.value.length) {
         for (let i = 0; i < result.value.length; i++) {
@@ -100,7 +101,9 @@ export async function getNFTTokens(owner, connection) {
                 try {
                     const metadata = await getMetadata(connection, mint);
                     const {
-                        data: {uri}} = metadata;
+                        data,
+                        data: {uri}
+                    } = metadata;
                     if (uri) {
                         ret.push({...data, token: mint});
                     }
@@ -136,10 +139,12 @@ async function getMetadata(connection, mint) {
             Metadata,
             binaryData
         );
+        // console.log('metadata----', metadata)
 
         metadata.data.name = metadata.data.name.replace(/\0/g, "");
         metadata.data.symbol = metadata.data.symbol.replace(/\0/g, "");
         metadata.data.uri = metadata.data.uri.replace(/\0/g, "");
+        // console.log('metadata----', metadata)
         return metadata;
     }
 }

@@ -2,18 +2,19 @@ import React from 'react';
 import styled from 'styled-components'
 import {getMetadata} from "../service/metadata";
 
-const NFTItem = (data) => {
+const NFTItem = ({data}) => {
     const [metaData, setMetaData] = React.useState({});
     React.useEffect(() => {
-        // console.log('data---', data.data.data.uri);
-        getData();
+        getData(data);
     }, [data]);
 
-    const getData = React.useCallback(async () => {
-        const result = await getMetadata(data.data.data.uri)
-        setMetaData(result.data);
-        // console.log('metadata--',  result.data)
-    }, [data.data.data.uri])
+    const getData = React.useCallback(async (data) => {
+        console.log('data uri---', data)
+        if (data.uri) {
+            const result = await getMetadata(data.uri)
+            setMetaData(result.data);
+        }
+    }, [])
     return (
         <Container>
             <NFTImg src={metaData?.image}/>
@@ -23,7 +24,7 @@ const NFTItem = (data) => {
             <Description>
                 {metaData?.description}
             </Description>
-            <Date>11/07/2021</Date>
+            {/*<Date>11/07/2021</Date>*/}
         </Container>
     )
 };

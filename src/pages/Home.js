@@ -67,13 +67,13 @@ const Home = () => {
         return  <Container>
             <Row>
                 {data.map(item => {
-                    // console.log('item---', item.data.uri)
-                    if (item && item.data && item.data.uri) {
-                        return <Col sm={4} style={{marginTop: 30}}>
+                    if (item && item.uri) {
+                        console.log('item----', item)
+                        return <Col sm={4} key={item?.token} style={{marginTop: 30}}>
                             <NFTItem data={item}/>
                         </Col>
                     }
-                    return <div/>
+                    return <div key={item?.token}/>
 
                 })}
             </Row>
