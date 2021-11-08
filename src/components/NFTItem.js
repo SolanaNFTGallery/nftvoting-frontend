@@ -17,7 +17,7 @@ const NFTItem = ({data}) => {
     }, [])
     return (
         <Container>
-            <NFTImg src={metaData?.image}/>
+            <NFTImg src={metaData?.image} alt={`No Assets for ${metaData?.name}`}/>
             <Title>
                 {metaData?.name}
             </Title>
@@ -34,15 +34,15 @@ const Container = styled.div`
   background-color: #161519;
   padding-bottom: 20px;
   border-radius: 30px;
-
+  min-height: 450px;
   &:hover {
     background-color: #7111b6;
     cursor: pointer;
   }
 `
-const Title = styled.h2`
+const Title = styled.h1`
   color: white;
-  margin-top: 10px;
+  margin-top: 30px;
 `
 const Description = styled.p`
   color: #aca1b0;
