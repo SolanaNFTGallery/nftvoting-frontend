@@ -34,6 +34,11 @@ const Container = styled.div`
   background-color: #161519;
   padding-bottom: 20px;
   border-radius: 30px;
+
+  &:hover {
+    background-color: #7111b6;
+    cursor: pointer;
+  }
 `
 const Title = styled.h2`
   color: white;
