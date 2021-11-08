@@ -68,9 +68,13 @@ const Home = () => {
             <Row>
                 {data.map(item => {
                     if (item && item.uri) {
-                        console.log('item----', item)
-                        return <Col sm={4} key={item?.token} style={{marginTop: 30}}>
+                        return <Col sm={4} key={item?.uri} style={{marginTop: 30}}>
                             <NFTItem data={item}/>
+                        </Col>
+                    }
+                    if (item && item.data.uri) {
+                        return <Col sm={4} key={item?.data?.uri} style={{marginTop: 30}}>
+                            <NFTItem data={item.data}/>
                         </Col>
                     }
                     return <div key={item?.token}/>
