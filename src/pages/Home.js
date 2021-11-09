@@ -13,6 +13,7 @@ const Home = () => {
     const [publicKey, setPublickKey] = React.useState(null);
     const [connection, setConnection] = React.useState(null);
     const [data, setData] = React.useState([]);
+    const [isLoading, setLoading] = React.useState(false);
 
     React.useEffect(() => {
         setTimeout(() => {
@@ -37,8 +38,10 @@ const Home = () => {
     }, [phantom]);
 
     const getInitNFTs = async () => {
+        setLoading(true);
         const results = await getNFTTokens(new PublicKey(process.env.REACT_APP_WALLET_ADDRESS), connection)
         setData(results);
+        setLoading(false);
     };
 
     const getConnection = () => {
@@ -49,7 +52,7 @@ const Home = () => {
     };
 
     const connectPhantom = React.useCallback(() => {
-      phantom.connect();
+        phantom.connect();
     }, [phantom]);
 
     const disconnectHandler = React.useCallback(() => {
@@ -65,9 +68,11 @@ const Home = () => {
     const getTokens = React.useCallback(async () => {
         console.log(!connection || !publicKey);
         if (!connection || !publicKey) return;
+        setLoading(true)
         const result = await getNFTTokens(publicKey, connection);
         console.log(result);
         setData(result)
+        setLoading(false)
     }, [connection, publicKey])
 
     const RenderData = React.useCallback(() => {
@@ -106,7 +111,7 @@ const Home = () => {
                     Get Phantom
                 </Button>
             </a>}
-            {(phantom && connected) && <Button colorScheme="teal" variant="outline" onClick={getInitNFTs}>
+            {(phantom && connected) && <Button colorScheme="teal" variant="outline" onClick={getInitNFTs} isLoading={isLoading} loadingText="Getting NFTs" spinnerPlacement="end">
                 Get Init NFTs
             </Button>}
             {(phantom && connected) && <Button colorScheme="teal" variant="outline" onClick={getTokens}>
@@ -114,11 +119,10 @@ const Home = () => {
             </Button>}
         </Stack>
         {RenderData()}
-
     </ContainerView>
 }
 const ContainerView = styled.div`
-    padding-top: 100px;
+  padding-top: 100px;
   padding-left: 20%;
   padding-right: 20%;
   flex:1;
