@@ -1,42 +1,85 @@
 import React from 'react';
 import styled from 'styled-components'
 import {getMetadata} from "../service/metadata";
-import { Button, Center } from "@chakra-ui/react"
+import { Button, Grid } from "@chakra-ui/react"
+import {createVoter, updateVoter} from "../service/firestore";
 
-const NFTItem = ({data}) => {
+const NFTItem = ({data, voters, publicKey, mint, getInitVoters, ...props}) => {
+    const [vote, setVote] = React.useState(null);
     const [metaData, setMetaData] = React.useState({});
+    const [keeps, setKeeps] = React.useState(0);
+    const [burns, setBurns] = React.useState(0);
+    const [isKeeping, setKeeping] = React.useState(false);
+    const [isBurning, setBurning] = React.useState(false);
+    const [imgExist, setImgExist] = React.useState(false);
     React.useEffect(() => {
         getData(data);
+        data && checkImg(data.uri)
     }, [data]);
+    React.useEffect(() => {
+        setVote({...voters.find(v => v.publicKey === publicKey && v.mint === mint)})
+        setKeeps(voters.filter(v => v.mint === mint && v.vote === 1)?.length);
+        setBurns(voters.filter(v => v.mint === mint && v.vote === 0)?.length);
+    }, [voters])
 
     const getData = React.useCallback(async (data) => {
-        console.log('data uri---', data)
         if (data.uri) {
             const result = await getMetadata(data.uri)
             setMetaData(result.data);
         }
+        // const vote1 = voters.find(v => v.publicKey === publicKey && v.mint === mint);
     }, [])
+    const onKeep = async () => {
+        setKeeping(true);
+        Object.keys(vote).length && await updateVoter(vote.id, 1)
+        Object.keys(vote).length || await createVoter(publicKey, mint, 1)
+        getInitVoters();
+        setKeeping(false);
+    }
+    const onBurn = async () => {
+        setBurning(true);
+        Object.keys(vote).length && await updateVoter(vote.id, 0)
+        Object.keys(vote).length || await createVoter(publicKey, mint, 0)
+        getInitVoters();
+        setBurning(false);
+    }
+    const checkImg = (url) => {
+        console.log('url-----', url)
+        fetch(new Request(url, {method: 'HEAD', mode: 'no-cors'}))
+            .then(function() {
+                console.log('exist');
+                setImgExist(true);
+            })
+            .catch(function() {
+                console.log('not eixt')
+                setImgExist(false)
+            });
+    }
     return (
-        <Container pos="relative">
-            <NFTImg src={metaData?.image} alt={`No Assets for ${metaData?.name}`}/>
+        <Container pos="relative" style={{position: 'relative'}}>
+            {imgExist && <NFTImg src={metaData?.image} alt={`No Assets for ${metaData?.name}`}
+                                 onload="javascript: alert('success')"
+                                 onerror="javascript: alert('failure')"
+            />}
             <Title>
                 {metaData?.name}
             </Title>
             <Description>
                 {metaData?.description}
             </Description>
-            {/*<Center w={"full"}>*/}
-            <Button colorScheme="blue" variant="outline" w={"80%"} pos="absolute" bottom={10} left={"10%"}>
-                Vote
-            </Button>
-            {/*</Center>*/}
-            {/*<Date>11/07/2021</Date>*/}
+            <Grid templateColumns="repeat(2, 1fr)" gap={6} style={{position: 'absolute', bottom: 30}} w={'90%'} marginLeft={'5%'}>
+                <Button colorScheme="blue" variant="outline" isDisabled={vote && vote.vote === 1} onClick={() => onKeep()} isLoading={isKeeping} loadingText={`Keeping(${keeps})`} spinnerPlacement="end">
+                    Keep({keeps})
+                </Button>
+                <Button colorScheme="blue" variant="outline" isDisabled={vote && vote.vote === 0} onClick={() => onBurn()} isLoading={isBurning} loadingText={`Burning(${burns})`} spinnerPlacement="end">
+                    Burn({burns})
+                </Button>
+            </Grid>
         </Container>
     )
 };
 
 const Container = styled.div`
-  width: 100%;
   background-color: #161519;
   padding-bottom: 20px;
   border-radius: 30px;
@@ -55,9 +98,9 @@ const Description = styled.p`
   width: 70%;
   margin: auto;
 `;
-const Date = styled.h4`
-  color: #aca1b0;
-`;
+// const Date = styled.h4`
+//   color: #aca1b0;
+// `;
 const NFTImg = styled.img`
   width: 100%;
   height: 300px;

@@ -2,8 +2,8 @@ import React from 'react';
 import {getNFTTokens} from '../service/web3';
 import NFTItem from "../components/NFTItem";
 import styled from 'styled-components';
-import { Button, Stack } from "@chakra-ui/react"
-import { Container, Row, Col } from 'react-grid-system';
+import { Button, Stack, Grid, Box } from "@chakra-ui/react"
+import {getVoters} from "../service/firestore";
 const web3 = require('@solana/web3.js');
 const {PublicKey} = require('@solana/web3.js');
 
@@ -14,6 +14,7 @@ const Home = () => {
     const [connection, setConnection] = React.useState(null);
     const [data, setData] = React.useState([]);
     const [isLoading, setLoading] = React.useState(false);
+    const [voters, setVoters] = React.useState([]);
 
     React.useEffect(() => {
         setTimeout(() => {
@@ -21,10 +22,12 @@ const Home = () => {
                 setPhantom(window["solana"]);
             }
         }, 100)
+        getInitVoters();
     }, []);
     React.useEffect(() => {
         phantom?.on("connect", (res) => {
             setConnected(true);
+            console.log('res--', res.toString())
             setPublickKey(res);
             getConnection()
         });
@@ -36,6 +39,12 @@ const Home = () => {
             setConnection(null)
         });
     }, [phantom]);
+
+    const getInitVoters = async () => {
+        const result = await getVoters();
+        console.log('result---', result);
+        setVoters([...result]);
+    };
 
     const getInitNFTs = async () => {
         setLoading(true);
@@ -76,24 +85,41 @@ const Home = () => {
     }, [connection, publicKey])
 
     const RenderData = React.useCallback(() => {
-        return  <Container>
-            <Row>
+        return  <div>
+            <Grid templateColumns="repeat(3, 1fr)" gap={6}>
                 {data.map(item => {
+                    // console.log('item---', item.token, publicKey.toString())
                     if (item && item.uri) {
-                        return <Col sm={4} key={item?.uri} style={{marginTop: 30}}>
-                            <NFTItem data={item}/>
-                        </Col>
+                        const vote = voters.find(v => v.publicKey === publicKey.toString() && v.mint === item.token);
+                        return <Box sm={4} key={item?.uri} style={{marginTop: 30}}>
+                            <NFTItem
+                                data={item}
+                                vote={vote}
+                                voters={[...voters]}
+                                publicKey={publicKey.toString()}
+                                mint={item.token}
+                                getInitVoters={getInitVoters}
+                            />
+                        </Box>
                     }
                     if (item && item.data.uri) {
-                        return <Col sm={4} key={item?.data?.uri} style={{marginTop: 30}}>
-                            <NFTItem data={item.data}/>
-                        </Col>
+                        const vote = voters.find(v => v.publicKey === publicKey.toString() && v.mint === item.data.token);
+                        return <Box sm={4} key={item?.data?.uri} style={{marginTop: 30}}>
+                            <NFTItem
+                                data={item.data}
+                                vote={vote}
+                                voters={[...voters]}
+                                publicKey={publicKey.toString()}
+                                mint={item.token}
+                                getInitVoters={getInitVoters}
+                            />
+                        </Box>
                     }
                     return <div key={item?.token}/>
                 })}
-            </Row>
-        </Container>
-    }, [data])
+            </Grid>
+        </div>
+    }, [data, voters])
     return <ContainerView>
         <Stack direction="row" spacing={4} align="flex-end">
             {(phantom && !connected) && <Button colorScheme="teal" variant="solid" onClick={connectPhantom}>
@@ -114,9 +140,9 @@ const Home = () => {
             {(phantom && connected) && <Button colorScheme="teal" variant="outline" onClick={getInitNFTs} isLoading={isLoading} loadingText="Getting NFTs" spinnerPlacement="end">
                 Get Init NFTs
             </Button>}
-            {(phantom && connected) && <Button colorScheme="teal" variant="outline" onClick={getTokens}>
-                Get NFTs
-            </Button>}
+            {/*{(phantom && connected) && <Button colorScheme="teal" variant="outline" onClick={getTokens}>*/}
+            {/*    Get NFTs*/}
+            {/*</Button>}*/}
         </Stack>
         {RenderData()}
     </ContainerView>
