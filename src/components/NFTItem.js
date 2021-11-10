@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import {getMetadata} from "../service/metadata";
-import { Button, Grid } from "@chakra-ui/react"
+import { Button, Grid, useToast } from "@chakra-ui/react"
 import {createVoter, updateVoter} from "../service/firestore";
 
 const NFTItem = ({data, voters, publicKey, mint, getInitVoters, ...props}) => {
@@ -12,6 +12,7 @@ const NFTItem = ({data, voters, publicKey, mint, getInitVoters, ...props}) => {
     const [isKeeping, setKeeping] = React.useState(false);
     const [isBurning, setBurning] = React.useState(false);
     const [imgExist, setImgExist] = React.useState(false);
+    const toast = useToast();
     React.useEffect(() => {
         getData(data);
         data && checkImg(data.uri)
@@ -35,6 +36,14 @@ const NFTItem = ({data, voters, publicKey, mint, getInitVoters, ...props}) => {
         Object.keys(vote).length || await createVoter(publicKey, mint, 1)
         getInitVoters();
         setKeeping(false);
+        toast({
+            title: "Vote Registered",
+            description: `You voted(keep) to the token ${metaData?.name}`,
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+            position: 'top-right'
+        })
     }
     const onBurn = async () => {
         setBurning(true);
@@ -42,6 +51,14 @@ const NFTItem = ({data, voters, publicKey, mint, getInitVoters, ...props}) => {
         Object.keys(vote).length || await createVoter(publicKey, mint, 0)
         getInitVoters();
         setBurning(false);
+        toast({
+            title: "Vote Registered",
+            description: `You voted(burn) to the token ${metaData?.name}`,
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+            position: 'top-right'
+        })
     }
     const checkImg = (url) => {
         console.log('url-----', url)
