@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/jsx-no-target-blank */
 /* eslint-disable no-unused-vars */
 import React from "react";
 import { getNFTTokens } from "../service/web3";
