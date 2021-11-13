@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-script-url */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import styled from "styled-components";
