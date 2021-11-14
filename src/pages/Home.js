@@ -7,8 +7,20 @@ import NFTItem from "../components/NFTItem";
 import styled from "styled-components";
 import { Button, Stack, Grid, Box } from "@chakra-ui/react";
 import { getVoters } from "../service/firestore";
+import { extendTheme } from "@chakra-ui/react"
+import { createBreakpoints } from "@chakra-ui/theme-tools"
 const web3 = require("@solana/web3.js");
 const { PublicKey } = require("@solana/web3.js");
+
+const breakpoints = createBreakpoints({
+  sm: "320px",
+  md: "900px",
+  lg: "960px",
+  xl: "1200px",
+  "2xl": "1536px",
+})
+
+const theme = extendTheme({ breakpoints })
 
 const Home = () => {
   const [phantom, setPhantom] = React.useState(null);
@@ -92,7 +104,7 @@ const Home = () => {
   const RenderData = React.useCallback(() => {
     return (
       <div>
-        <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+        <Grid templateColumns={{base : "repeat(1, 1fr)", md : "repeat(2, 1fr)", "xl": "repeat(3, 1fr)"}} gap={6}>
           {data.map((item) => {
             // console.log('item---', item.token, publicKey.toString())
             if (item && item.uri) {
@@ -101,7 +113,7 @@ const Home = () => {
                   v.publicKey === publicKey.toString() && v.mint === item.token
               );
               return (
-                <Box sm={4} key={item?.uri} style={{ marginTop: 30 }}>
+                <Box sm={{base: 4, lg: 6}} key={item?.uri} style={{ marginTop: 30 }}>
                   <NFTItem
                     data={item}
                     vote={vote}
@@ -140,7 +152,7 @@ const Home = () => {
   }, [data, voters]);
   return (
     <ContainerView>
-      <Stack direction="row" spacing={4} align="flex-end">
+      <Stack direction={{base: "column", md: "row", lg: "row"}} spacing={4} align="flex-end">
         {phantom && !connected && (
           <Button onClick={connectPhantom}>Connect Phantom</Button>
         )}
