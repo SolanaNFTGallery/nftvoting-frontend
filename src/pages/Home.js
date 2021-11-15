@@ -132,7 +132,7 @@ const Home = () => {
                   v.mint === item.data.token
               );
               return (
-                <Box sm={4} key={item?.data?.uri} style={{ marginTop: 30 }}>
+                <Box align="center" sm={4} key={item?.data?.uri} style={{ marginTop: 30 }}>
                   <NFTItem
                     data={item.data}
                     vote={vote}
@@ -151,8 +151,8 @@ const Home = () => {
     );
   }, [data, voters]);
   return (
-    <ContainerView>
-      <Stack direction={{base: "column", md: "row", lg: "row"}} spacing={4} align="flex-end">
+    <ContainerView align="center">
+      <Stack direction={{base: "column", md: "row"}} spacing={4} align="center" justify={"center"}>
         {phantom && !connected && (
           <Button onClick={connectPhantom}>Connect Phantom</Button>
         )}
@@ -190,9 +190,11 @@ const Home = () => {
 };
 const ContainerView = styled.div`
   padding-top: 100px;
-  padding-left: 20%;
-  padding-right: 20%;
+  padding-left: 10%;
+  padding-right: 10%;
   flex: 1;
+  align-items: center;
+  text-align: center;
 `;
 
 export default Home;

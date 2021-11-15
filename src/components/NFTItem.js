@@ -135,6 +135,8 @@ const Container = styled.div`
   padding-bottom: 20px;
   border-radius: 30px;
   min-height: 500px;
+  width:300px;
+  margin: auto;
   &:hover {
     background-color: #7111b6;
     cursor: pointer;
