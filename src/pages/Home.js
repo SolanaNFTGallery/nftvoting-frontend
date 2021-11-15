@@ -17,7 +17,7 @@ const breakpoints = createBreakpoints({
   md: "900px",
   lg: "960px",
   xl: "1200px",
-  "2xl": "1536px",
+  "2xl": "1600px",
 })
 
 const theme = extendTheme({ breakpoints })
@@ -104,7 +104,7 @@ const Home = () => {
   const RenderData = React.useCallback(() => {
     return (
       <div>
-        <Grid templateColumns={{base : "repeat(1, 1fr)", md : "repeat(2, 1fr)", "xl": "repeat(3, 1fr)"}} gap={6}>
+        <Grid templateColumns={{base : "repeat(1, 1fr)", md: "repeat(2, 1fr)", xl : "repeat(3, 1fr)", "2xl": "repeat(4, 1fr)"}} gap={6}>
           {data.map((item) => {
             // console.log('item---', item.token, publicKey.toString())
             if (item && item.uri) {
@@ -113,7 +113,7 @@ const Home = () => {
                   v.publicKey === publicKey.toString() && v.mint === item.token
               );
               return (
-                <Box sm={{base: 4, lg: 6}} key={item?.uri} style={{ marginTop: 30 }}>
+                <Box sm={{base: 3, lg: 6}} key={item?.uri} style={{ marginTop: 30 }}>
                   <NFTItem
                     data={item}
                     vote={vote}
@@ -132,7 +132,7 @@ const Home = () => {
                   v.mint === item.data.token
               );
               return (
-                <Box align="center" sm={4} key={item?.data?.uri} style={{ marginTop: 30 }}>
+                <Box align="center" sm={3} key={item?.data?.uri} style={{ marginTop: 30 }}>
                   <NFTItem
                     data={item.data}
                     vote={vote}
